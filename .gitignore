@@ -1,5 +1,7 @@
 *.hi
 *.o
+*.exe
+.vscode
 zad5
 zad17
 zad23

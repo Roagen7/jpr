@@ -2,25 +2,22 @@ explen :: Int -> Int
 explen n = expansion 2 n []
     where
         expansion :: Int -> Int -> [Int] -> Int
-        expansion num den li = 
-            if or[num == 0, num == den]
-                then 0
-            else if num `elem` li
-                then (length li) - (positionInSequence num li)
-            else if num * 2 >= den
-                then  (expansion (num * 2-den) den (li ++ [num]))
-            else (expansion (num * 2) den (li ++ [num]))
+        expansion num den li  -- rozwinięcie póki nie zaczyna się powtarzać
+            | or[num == 0, num == den] = 0
+            | num `elem` li = (length li) - (positionInSequence num li)
+            | num * 2 >= den = expansion (num * 2-den) den (li ++ [num])
+            | otherwise = expansion (num * 2) den (li ++ [num])
         positionInSequence :: Int -> [Int] -> Int
-        positionInSequence n (x:xs) = 
+        positionInSequence n (x:xs) =  -- wyszukaj pierwszą liczbę która zaczyna powtarzanie
             if n == x
                 then 0
                 else 1 + positionInSequence n xs
         positionInSequence n [] = -1
 
 output :: Int -> String
-output n = "max period=" ++ (show md) ++ " for " ++ (
-    (foldl (\x y -> x ++ (fst y) ++ " ") "").
-    (filter (\x -> (snd x) == md))
+output n = "Maksymalny okres to: " ++ show md ++ ", dla liczby: " ++ (
+    foldl (\x y -> x ++ fst y ++ " ") "".
+    filter (\x -> snd x == md) -- bierzemy wszystkie wyniki i wypisujemy je
     ) decompositionList
     where 
         maxDecomposition :: [(String, Int)] -> Int
@@ -31,9 +28,12 @@ output n = "max period=" ++ (show md) ++ " for " ++ (
         md = maxDecomposition decompositionList
 
         decompositionList :: [(String, Int)]
-        decompositionList = map (\x -> ("1/" ++ (show x), explen x)) [2..n]
+        decompositionList = map (\x -> ("1/" ++ show x, explen x)) [2..n]
 
 main :: IO()
 main = do   
-    putStrLn $ show (output 18)
+    putStrLn "Podaj liczbe:"
+    num <- getLine
+    print (output (read num :: Int) )
         
+-- dla 18: okres 12, liczba 1/13

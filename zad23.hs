@@ -6,32 +6,31 @@ maxList (x:xs) =
     where mlist = maxList xs
 maxList [] = []
 
-maximal_distribution :: Int -> [Int]
-maximal_distribution n = maxList [memory!!i | i <- primes n]
+maximalDistribution :: Int -> [Int]
+maximalDistribution n = maxList [memory!!i | i <- primes n]
     where 
         memory :: [[Int]]
-        memory = (map opt [0..n])
+        memory = map opt [0..n]
         
         opt :: Int -> [Int]
-        opt v = (maxList . (filter (\x -> sum x == v))) [
-            if not (x `elem` memory!!(v-x)) 
+        opt v = (maxList . filter (\x -> sum x == v)) [
+            if x `notElem` (memory!!(v - x)) 
                 then memory!!(v - x) ++ [x]
                 else []
             | x <- primes v] 
   
         primes :: Int -> [Int]
-        primes p = [x | x <- [2..p], is_prime x]
+        primes p = [x | x <- [2..p], isPrime x]
 
-        is_prime :: Int -> Bool
-        is_prime p = 
-            (length . 
-            filter (\x -> and [p `mod` x == 0, x /= p])
-            ) [2..p] == 0
+        isPrime :: Int -> Bool
+        isPrime p = 
+            not (any (\x -> (p `mod` x == 0) && (x /= p)) [2..p])
 
 main :: IO()
 main = do   
-    putStrLn $ (show (sum mdist)) ++ ": " ++ (show mdist)
-    where
-        mdist = maximal_distribution 69
-    
+    putStrLn "Podaj liczbe:"
+    num <- getLine
+    let mdist = maximalDistribution (read num :: Int)
+    putStrLn $ show (sum mdist) ++ ": " ++ show mdist
 
+-- dla 81: 79: [3,5,11,7,17,13,23]
