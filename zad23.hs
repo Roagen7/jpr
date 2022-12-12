@@ -1,4 +1,4 @@
-maxList :: [[Int]] -> [Int]
+maxList :: [[Int]] -> [Int] -- lista o max długości 
 maxList (x:xs) = 
     if length x >= length mlist
         then x
@@ -9,13 +9,13 @@ maxList [] = []
 maximalDistribution :: Int -> [Int]
 maximalDistribution n = maxList [memory!!i | i <- primes n]
     where 
-        memory :: [[Int]]
+        memory :: [[Int]] -- spamiętane maksymalne rozbicie liczby na składniki pierwsze
         memory = map opt [0..n]
         
-        opt :: Int -> [Int]
-        opt v = (maxList . filter (\x -> sum x == v)) [
-            if x `notElem` (memory!!(v - x)) 
-                then memory!!(v - x) ++ [x]
+        opt :: Int -> [Int] -- maksymalne rozbicie liczby na składniki pierwsze
+        opt v = (maxList . filter (\x -> sum x == v)) [ -- opt(x) = max(opt(x - p1) ++ [x], opt(x - p2) ++ [x] ...)
+            if x `notElem` (memory!!(v - x)) -- pozbycie się duplikatów
+                then memory!!(v - x) ++ [x] 
                 else []
             | x <- primes v] 
   
