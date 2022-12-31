@@ -27,3 +27,12 @@ graphic(A, Ans) :- has_negative(A), Ans = "nie jest graficzny".
 graphic(A, Ans) :- sorted(A,[H|T]),subd(T,H,P),graphic(P,Ans). 
 
 %z3 sprawdzanie czy ciąg graficzny jest grafu spójnego
+
+sum([],0).
+sum([H|T], S) :- sum(T, P), S is H + P.
+
+no_zeros([X]) :- X =\= 0 .
+no_zeros([H|T]) :- H =\= 0, no_zeros(T).
+
+connected(A) :- graphic(A,Ans), Ans = "jest graficzny",no_zeros(A), sum(A, S), len(A, N), S >= 2 * (N-1).
+connected(A, Out) :- connected(A), Out = "jest spojny" ; Out = "nie jest spojny".
