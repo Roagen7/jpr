@@ -1,16 +1,16 @@
 %z1 póki co bubble sort, jak coś innego nam się wylosuje to zmienimy
-sorted(L,S) :- len(L, N), bubbloop(L,N,S).
+sorted([], []).
+sorted([A],[A]).
+sorted([X,Y|T], S) :- split([X,Y|T], L1, L2), sorted(L1, S1), sorted(L2, S2), merge(S1, S2, S).
 
-len([], 0).
-len([H|T], N) :- len(T, NP), N is NP + 1.
+split([],[],[]).
+split([X],[X],[]).
+split([X,Y|T], [X|T1], [Y|T2]) :- split(T, T1, T2).
 
-bubbloop(A,0,A).
-bubbloop(A,N,S) :- N>0, NP is N - 1, bubb(A,P), bubbloop(P,NP,S).
-
-bubb([H|T],S) :- bubb2([H|T],T,S).
-bubb2(L,[],L).
-bubb2([X|T],[Y|C],[X|R]) :- X > Y, bubb2(T,C,R).
-bubb2([X|T], [Y|C], [Y|R]) :- X =< Y, bubb2([X|C],C,R).
+merge(X,[],X).
+merge([],Y,Y).
+merge([X|T1], [Y|T2], [X|T]) :- X > Y, merge(T1, [Y|T2], T).
+merge([X|T1], [Y|T2], [Y|T]) :- X =< Y, merge([X|T1],T2, T).
 
 %z2 sprawdzanie czy ciąg jest graficzny
 is_zero([X]) :- X = 0.
@@ -27,6 +27,9 @@ graphic(A, Ans) :- has_negative(A), Ans = "nie jest graficzny".
 graphic(A, Ans) :- sorted(A,[H|T]),subd(T,H,P),graphic(P,Ans). 
 
 %z3 sprawdzanie czy ciąg graficzny jest grafu spójnego
+
+len([], 0).
+len([H|T], N) :- len(T, NP), N is NP + 1.
 
 sum([],0).
 sum([H|T], S) :- sum(T, P), S is H + P.
